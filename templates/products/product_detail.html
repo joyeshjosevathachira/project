@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} - Django Shop{% endblock %}
+
+{% block content %}
+<div class="product-detail">
+    {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="detail-img">
+    {% else %}
+        <div class="placeholder-img large">No Image</div>
+    {% endif %}
+    <div class="detail-info">
+        <h1>{{ product.name }}</h1>
+        {% if product.category %}
+            <p class="category-tag">
+                <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a>
+            </p>
+        {% endif %}
+        <p class="price-large">${{ product.price }}</p>
+        <p class="stock {% if not product.in_stock %}out{% endif %}">
+            {% if product.in_stock %}{{ product.stock }} in stock{% else %}Out of stock{% endif %}
+        </p>
+        <p>{{ product.description|linebreaks }}</p>
+
+        {% if product.in_stock %}
+        <form action="{% url 'cart:cart_add' product.id %}" method="post">
+            {% csrf_token %}
+            {{ cart_product_form }}
+            <button type="submit" class="btn btn-primary">Add to cart</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

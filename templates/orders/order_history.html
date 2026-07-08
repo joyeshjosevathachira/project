@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}My Orders - Django Shop{% endblock %}
+
+{% block content %}
+<h1>My Orders</h1>
+
+{% for order in orders %}
+    <div class="order-card">
+        <h3>Order #{{ order.id }} &mdash; <span class="status">{{ order.get_status_display }}</span></h3>
+        <p>Placed on {{ order.created_at|date:"M d, Y H:i" }}</p>
+        <ul>
+            {% for item in order.items.all %}
+                <li>{{ item.product.name }} &times; {{ item.quantity }} = ${{ item.get_cost }}</li>
+            {% endfor %}
+        </ul>
+        <p><strong>Total: ${{ order.get_total_cost }}</strong></p>
+    </div>
+{% empty %}
+    <p>You haven't placed any orders yet.</p>
+{% endfor %}
+{% endblock %}
